@@ -334,7 +334,7 @@
                         <h1 style="margin:0 0 10px 0;font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Provador Virtual</h1>
                         <div style="margin:0;text-align:center;">
   <img
-    src="COLOQUE_URL_LOGO_CALIFA_AQUI"
+    src="https://i.ibb.co/cKXZD109/Adobe-Express-file-16-1.png"
     alt="CALIFA BRAND"
     style="height:30px;width:auto;display:inline-block;filter:brightness(0);"
   />
