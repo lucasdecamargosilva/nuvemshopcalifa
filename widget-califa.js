@@ -110,38 +110,40 @@
             --q-text: #000000; --q-text-light: #666666;
         }
 
-        /* ── BOTÃO RETANGULAR ARREDONDADO ──────────────────────────────────────── */
+        /* ── BOTÃO SELO ─────────────────────────────────────────────────────────── */
+        @keyframes q-shake {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(-10deg); }
+            20% { transform: rotate(10deg); }
+            30% { transform: rotate(-10deg); }
+            40% { transform: rotate(10deg); }
+            50% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
         .q-btn-trigger-ia {
             position: absolute;
             top: 15px;
             right: 15px;
             z-index: 100;
-            background: rgba(0,0,0,0.75);
+            background: none;
             border: none;
-            padding: 8px 14px;
+            padding: 0;
             cursor: pointer;
+            width: 72px;
+            height: 72px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: background 0.3s;
+            justify-content: center;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+            animation: q-shake 3s infinite;
         }
         .q-btn-trigger-ia:hover {
-            background: rgba(0,0,0,0.9);
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.28));
         }
         .q-btn-trigger-ia svg {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-        }
-        .q-btn-trigger-ia span {
-            font-family: 'Inter', sans-serif;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: #fff;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
         }
 
         @media (max-width: 767px) {
@@ -172,7 +174,8 @@
 
         @media (min-width: 768px) {
             .q-btn-trigger-ia {
-                padding: 10px 18px;
+                width: 65px;
+                height: 65px;
             }
         }
 
@@ -183,10 +186,11 @@
             justify-content: center;
             gap: 6px;
             width: 100%;
-            padding: 10px 14px;
+            padding: 12px 14px;
             background: transparent;
             color: #000;
             border: 1px solid #000;
+            border-radius: 50px;
             font-family: 'Work Sans', sans-serif;
             font-weight: 600;
             font-size: 10px;
@@ -315,8 +319,8 @@
     `;
 
 
-    // ─── CONTEÚDO DO BOTÃO (trigger) ───────────────────────────────────────────
-    const stampImageHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Provador Virtual</span>`;
+    // ─── IMAGEM DO BOTÃO (trigger) ─────────────────────────────────────────────
+    const stampImageHTML = `<img src="https://cdn.shopify.com/s/files/1/0636/6334/1746/files/logo_provador.png?v=1772494793" alt="Provador Virtual" style="width:100%;height:100%;object-fit:contain;">`;
 
 
 
