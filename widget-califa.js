@@ -810,8 +810,7 @@
 
             try {
                 const fd = new FormData();
-                const resizedPerson = await resizeImage(userPhoto, 1024);
-                fd.append('person_image', resizedPerson, 'person.jpg');
+                fd.append('person_image', userPhoto, 'person.jpg');
                 fd.append('whatsapp', '55' + phoneInput.value.replace(/\D/g, ''));
                 fd.append('phone_raw', phoneInput.value);
                 fd.append('product_name', prodName);
@@ -832,8 +831,7 @@
                 if (prodImg) {
                     try {
                         const b = await fetch(prodImg).then(r => r.blob());
-                        const resizedProduct = await resizeImage(b, 1024);
-                        fd.append('product_image', resizedProduct, 'product.jpg');
+                        fd.append('product_image', b, 'product.jpg');
                     } catch (_) { }
                 }
 
