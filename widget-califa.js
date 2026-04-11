@@ -713,7 +713,7 @@
                     const c = document.createElement('canvas');
                     c.width = w; c.height = h;
                     c.getContext('2d').drawImage(img, 0, 0, w, h);
-                    c.toBlob(b => resolve(b), 'image/jpeg', 0.85);
+                    c.toBlob(b => resolve(b), 'image/jpeg', 0.95);
                 };
                 const url = URL.createObjectURL(fileOrBlob instanceof Blob ? fileOrBlob : new Blob([fileOrBlob]));
                 img.src = url;
@@ -810,7 +810,7 @@
 
             try {
                 const fd = new FormData();
-                const resizedPerson = await resizeImage(userPhoto, 512);
+                const resizedPerson = await resizeImage(userPhoto, 1024);
                 fd.append('person_image', resizedPerson, 'person.jpg');
                 fd.append('whatsapp', '55' + phoneInput.value.replace(/\D/g, ''));
                 fd.append('phone_raw', phoneInput.value);
@@ -832,7 +832,7 @@
                 if (prodImg) {
                     try {
                         const b = await fetch(prodImg).then(r => r.blob());
-                        const resizedProduct = await resizeImage(b, 512);
+                        const resizedProduct = await resizeImage(b, 1024);
                         fd.append('product_image', resizedProduct, 'product.jpg');
                     } catch (_) { }
                 }
