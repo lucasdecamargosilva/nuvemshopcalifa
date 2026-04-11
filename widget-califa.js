@@ -537,6 +537,14 @@
         let userPhoto = null;
         let selectedProductImgUrl = '';
 
+        // Upgrade Nuvemshop CDN URLs to 1024px version
+        function upgradeImgUrl(url) {
+            if (url.includes('mitiendanube.com') || url.includes('nuvemshop.com')) {
+                return url.replace(/-\d+-\d+\.webp/, '-1024-1024.webp');
+            }
+            return url;
+        }
+
         function extractImages() {
             const containersSelectors = '.js-product-slide, .product-image-column, .js-swiper-product, [data-store^="product-image-"], .product__media-wrapper, .product-gallery__media, .product__media, .product-image-main, .product-media-container, [data-media-id], .product__media-item, .product-gallery, .product-single__media, .media-gallery, [data-component="product.gallery"], .swiper-slide:not(.swiper-slide-duplicate), .slider-wrapper';
             const possibleContainers = Array.from(document.querySelectorAll(containersSelectors));
@@ -570,6 +578,9 @@
                 if (img.naturalWidth > 0 && img.naturalWidth < 50) return;
                 if (img.naturalHeight > 0 && img.naturalHeight < 50) return;
 
+                // Upgrade to 1024px version
+                src = upgradeImgUrl(src);
+
                 let cleanSrc = src.split('?')[0].replace(/-\d+-\d+\.webp|_\d+x\d+/, '');
 
                 if (!uniqueImgs.some(u => u.split('?')[0].replace(/-\d+-\d+\.webp|_\d+x\d+/, '') === cleanSrc)) {
@@ -578,7 +589,7 @@
             });
             if (uniqueImgs.length === 0) {
                 const og = document.querySelector('meta[property="og:image"]')?.content;
-                if (og) uniqueImgs.push(og);
+                if (og) uniqueImgs.push(upgradeImgUrl(og));
             }
             return uniqueImgs.slice(0, 2);
         }
