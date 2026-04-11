@@ -587,7 +587,7 @@
             const imgs = extractImages();
             const group = document.getElementById('q-photo-selector-group');
             group.style.display = 'none';
-            selectedProductImgUrl = imgs[1] || imgs[0] || '';
+            selectedProductImgUrl = imgs[0] || '';
             return;
 
             imgs.forEach((url, i) => {
