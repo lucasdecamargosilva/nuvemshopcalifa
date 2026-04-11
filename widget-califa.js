@@ -6,9 +6,10 @@
     window.PROVOU_LEVOU_API_KEY = apiKey;
 
     const WEBHOOK_PROVA = 'https://n8n.segredosdodrop.com/webhook/gerador-oculos';
-    const WEBHOOK_PIX = 'https://n8n.segredosdodrop.com/webhook/califa-pix';
-    const WEBHOOK_PIX_STATUS = 'https://n8n.segredosdodrop.com/webhook/califa-pix-status';
-    const WEBHOOK_CHECK_LIMIT = 'https://n8n.segredosdodrop.com/webhook/califa-check-limit';
+    // PIX desativado por enquanto — descomentar quando for ativar
+    // const WEBHOOK_PIX = 'https://n8n.segredosdodrop.com/webhook/califa-pix';
+    // const WEBHOOK_PIX_STATUS = 'https://n8n.segredosdodrop.com/webhook/califa-pix-status';
+    // const WEBHOOK_CHECK_LIMIT = 'https://n8n.segredosdodrop.com/webhook/califa-check-limit';
     const SIZES_TOP = ['XXP', 'XP', 'P', 'M', 'G', 'XG', 'XXG', '3XG', '4XG', '5XG'];
     const SIZES_BOTTOM = ['36/XXP', '38/XP', '40/P', '42/M', '44/G', '46/XG', '48/XXG', '50/3XG', '52/4XG', '54/5XG'];
     const SIZES_BOTTOM_SW = ['XXP', 'XP', 'P', 'M', 'G', 'XG', 'XXG', '3XG', '4XG', '5XG'];
@@ -882,27 +883,24 @@
 
         genBtn.onclick = async () => {
             if (!userPhoto) return;
-
-            const phone = '55' + phoneInput.value.replace(/\D/g, '');
-            genBtn.disabled = true;
-
-            try {
-                const resp = await fetch(WEBHOOK_CHECK_LIMIT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone })
-                });
-                const data = await resp.json();
-                if (data.limited) {
-                    genBtn.disabled = false;
-                    createPixAndPoll();
-                    return;
-                }
-            } catch (_) {
-                // se o check falhar, deixa gerar (evita bloquear por erro de rede)
-            }
-
-            genBtn.disabled = false;
+            // PIX desativado — vai direto para geração
+            // Descomentar o bloco abaixo quando reativar PIX:
+            // const phone = '55' + phoneInput.value.replace(/\D/g, '');
+            // genBtn.disabled = true;
+            // try {
+            //     const resp = await fetch(WEBHOOK_CHECK_LIMIT, {
+            //         method: 'POST',
+            //         headers: { 'Content-Type': 'application/json' },
+            //         body: JSON.stringify({ phone })
+            //     });
+            //     const data = await resp.json();
+            //     if (data.limited) {
+            //         genBtn.disabled = false;
+            //         createPixAndPoll();
+            //         return;
+            //     }
+            // } catch (_) {}
+            // genBtn.disabled = false;
             runGeneration();
         };
     }
