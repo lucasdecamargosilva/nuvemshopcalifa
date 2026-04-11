@@ -597,11 +597,12 @@
 
             group.style.display = 'flex';
             group.style.flexDirection = 'column';
-            selectedProductImgUrl = imgs[0];
+            selectedProductImgUrl = imgs[1] || imgs[0];
 
             imgs.forEach((url, i) => {
+                const isDefault = (i === 1);
                 const box = document.createElement('div');
-                box.style.cssText = `width:70px; height:90px; border: 2px solid ${i === 0 ? 'var(--q-primary)' : 'var(--q-gray)'}; border-radius:4px; overflow:hidden; cursor:pointer; opacity: ${i === 0 ? '1' : '0.5'}; transition: 0.3s;`;
+                box.style.cssText = `width:70px; height:90px; border: 2px solid ${isDefault ? 'var(--q-primary)' : 'var(--q-gray)'}; border-radius:4px; overflow:hidden; cursor:pointer; opacity: ${isDefault ? '1' : '0.5'}; transition: 0.3s;`;
                 const img = document.createElement('img');
                 img.src = url;
                 img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
