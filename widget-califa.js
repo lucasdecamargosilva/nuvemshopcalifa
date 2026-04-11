@@ -585,19 +585,10 @@
 
         function populateImageSelector() {
             const imgs = extractImages();
-            const container = document.getElementById('q-product-images-container');
             const group = document.getElementById('q-photo-selector-group');
-            container.innerHTML = '';
-
-            if (imgs.length < 2) {
-                group.style.display = 'none';
-                selectedProductImgUrl = imgs[0] || '';
-                return;
-            }
-
-            group.style.display = 'flex';
-            group.style.flexDirection = 'column';
-            selectedProductImgUrl = imgs[1] || imgs[0];
+            group.style.display = 'none';
+            selectedProductImgUrl = imgs[1] || imgs[0] || '';
+            return;
 
             imgs.forEach((url, i) => {
                 const isDefault = (i === 1);
