@@ -147,28 +147,54 @@
         }
 
         @media (max-width: 767px) {
-            .q-card-ia {
-                max-width: 100% !important;
-                width: 100% !important;
-                height: 100% !important;
-                max-height: 100vh !important;
-                border: none !important;
-            }
             #q-modal-ia {
                 padding: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+            .q-card-ia {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                height: 100vh !important;
+                max-height: 100vh !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
             }
             .q-content-scroll {
+                width: 100vw !important;
+                max-width: 100vw !important;
                 padding: 20px 16px !important;
+                box-sizing: border-box !important;
+            }
+            .q-lead-form {
+                width: 320px !important;
+                max-width: calc(100vw - 32px) !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                box-sizing: border-box !important;
             }
             .q-group {
                 width: 100% !important;
+                max-width: 320px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
                 flex: none !important;
+                box-sizing: border-box !important;
+                text-align: center !important;
+            }
+            .q-group label {
+                text-align: center !important;
             }
             .q-input {
-                width: -webkit-fill-available !important;
-                width: -moz-available !important;
                 width: 100% !important;
+                max-width: 320px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
                 box-sizing: border-box !important;
+                display: block !important;
+                text-align: center !important;
             }
         }
 
