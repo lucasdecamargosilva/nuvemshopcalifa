@@ -527,7 +527,7 @@
                     <!-- Persistent header (all steps) -->
                     <div id="q-header-provador">
                         <h1>Provador Virtual</h1>
-                        <img src="https://i.ibb.co/cKXZD109/Adobe-Express-file-16-1.png" alt="CALIFA BRAND" style="height:36px;width:auto;"/>
+                        <img src="https://i.ibb.co/cKXZD109/Adobe-Express-file-16-1.png" alt="CALIFA BRAND" style="height:26px;width:auto;"/>
                     </div>
 
                     <!-- Main step -->
