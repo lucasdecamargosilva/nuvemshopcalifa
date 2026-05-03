@@ -525,17 +525,14 @@
                 <button type="button" class="q-close-ia" id="q-close-btn">&times;</button>
                 <div class="q-content-scroll">
 
+                    <!-- Persistent header (all steps) -->
+                    <div id="q-header-provador">
+                        <h1>Provador Virtual</h1>
+                        <img src="https://i.ibb.co/cKXZD109/Adobe-Express-file-16-1.png" alt="CALIFA BRAND" style="height:36px;width:auto;"/>
+                    </div>
+
                     <!-- Main step -->
                     <div id="q-step-photo">
-                        <div id="q-header-provador">
-                            <h1>Provador Virtual</h1>
-                            <img
-                                src="https://i.ibb.co/cKXZD109/Adobe-Express-file-16-1.png"
-                                alt="CALIFA BRAND"
-                                style="height:36px;width:auto;"
-                            />
-                        </div>
-
                         <!-- WhatsApp -->
                         <div class="q-phone-wrap">
                             <span class="q-field-label">Seu WhatsApp</span>
