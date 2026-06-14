@@ -530,6 +530,21 @@
         }
         .q-res-mobile-only { margin: 0; }
 
+        /* CTA de compra na tela de resultado */
+        .q-btn-buy-now {
+            background: var(--c-ink); color: #fff; border: 1px solid var(--c-ink);
+            width: 100%; padding: 17px 18px; font-family: var(--font-body);
+            font-weight: 700; font-size: 15px; letter-spacing: .2px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            border-radius: 3px; transition: .2s; line-height: 1.2;
+        }
+        .q-btn-buy-now:hover { opacity: .88; }
+        .q-btn-buy-now .q-buy-price { font-weight: 800; white-space: nowrap; }
+        .q-buy-trust {
+            text-align: center; font-size: 11px; color: var(--c-muted);
+            margin-top: 2px; letter-spacing: .2px;
+        }
+
         /* ── Related products ── */
         #q-related-products { padding: 0 28px 28px; }
         #q-related-products h4 {
@@ -714,12 +729,16 @@
 
                     <!-- Resultado -->
                     <div id="q-step-result">
-                        <span class="q-res-title">Veja como ficou em voc&ecirc;</span>
+                        <span class="q-res-title">Veja como ficou em voc&ecirc; &#x2728;</span>
                         <div id="q-result-img-col">
                             <img id="q-final-view-img">
                         </div>
                         <div id="q-result-actions-col">
                             <div id="q-provas-restantes-result" class="q-provas-msg" style="text-align:center;margin-bottom:8px;"></div>
+                            <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">
+                                <span id="q-buy-label">Quero esse</span> <span style="font-size:16px;">&#128526;</span> <span class="q-buy-price" id="q-buy-price"></span>
+                            </button>
+                            <div class="q-buy-trust" id="q-buy-trust" style="display:none;">&#128274; Compra segura &middot; troca f&aacute;cil em 30 dias</div>
                             <button class="q-btn-outline" id="q-btn-back">Voltar ao Produto</button>
                             <button class="q-btn-black q-res-mobile-only" id="q-retry-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;">
                                 <i class="ph ph-camera"></i> Tentar outra foto
@@ -746,6 +765,54 @@
             </div>
         </div>
     `;
+
+
+    // ─── CTA DE COMPRA NO RESULTADO ───────────────────────────────────────────────
+
+    // Caminho do checkout da Nuvemshop. Se na loja o checkout direto não abrir,
+    // troque para '/comprar/' por '/carrinho' (1 linha) — é o único ponto a validar ao vivo.
+    var Q_CHECKOUT_URL = '/comprar/';
+
+    function getMainPrice() {
+        // 1) preço exibido na página (vários temas Nuvemshop)
+        var sel = '.js-price-display, [data-product-price], .product__price .price, .js-product-price, .price-display';
+        var el = document.querySelector(sel);
+        if (el) {
+            var t = (el.getAttribute('data-product-price') || el.textContent || '').trim();
+            if (t && /\d/.test(t)) {
+                // normaliza "R$ 289,00" / "28900" -> "R$ 289,00"
+                if (/^\d+$/.test(t)) { var n = (parseInt(t,10)/100).toFixed(2).replace('.',','); return 'R$ ' + n; }
+                return t.replace(/\s+/g,' ');
+            }
+        }
+        // 2) fallback: data-variants do produto principal (mesmo formato dos "Veja também")
+        var dv = document.querySelector('[data-variants]');
+        if (dv) {
+            try { var v = JSON.parse(dv.getAttribute('data-variants'))[0]; if (v && v.price_short) return v.price_short; } catch (e) {}
+        }
+        return '';
+    }
+
+    function findStoreBuyBtn() {
+        return document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], [name="add_to_cart"], button[type="submit"].js-addtocart');
+    }
+
+    function populateBuyCta() {
+        var btn = document.getElementById('q-btn-buy-now');
+        var trust = document.getElementById('q-buy-trust');
+        if (!btn) return;
+        var price = getMainPrice();
+        var priceEl = document.getElementById('q-buy-price');
+        if (priceEl) priceEl.textContent = price ? ('— ' + price) : '';
+        btn.style.display = 'flex';
+        if (trust) trust.style.display = 'block';
+        btn.onclick = function () {
+            // adiciona ao carrinho pelo botão nativo da loja (lida com variação) e vai pro checkout
+            var sb = findStoreBuyBtn();
+            try { if (sb) sb.click(); } catch (e) {}
+            setTimeout(function () { window.location.href = Q_CHECKOUT_URL; }, 700);
+        };
+    }
 
 
     // ─── INIT ─────────────────────────────────────────────────────────────────────
@@ -886,23 +953,6 @@
         const cameraInput = document.getElementById('q-camera-input');
         const galleryInput= document.getElementById('q-gallery-input');
         const phoneInput  = document.getElementById('q-phone');
-
-        // ── Pré-preenche último número usado (localStorage) ──
-        const _PL_LAST_PHONE = 'pl_last_phone';
-        try {
-            const saved = localStorage.getItem(_PL_LAST_PHONE);
-            if (saved && /^\d{10,11}$/.test(saved)) {
-                const m = saved.match(/(\d{2})(\d{4,5})(\d{4})/);
-                if (m) phoneInput.value = '(' + m[1] + ') ' + m[2] + '-' + m[3];
-            }
-        } catch (_) {}
-        function _savePhoneIfValid() {
-            const nums = phoneInput.value.replace(/\D/g, '');
-            if (/^\d{10,11}$/.test(nums)) {
-                try { localStorage.setItem(_PL_LAST_PHONE, nums); } catch (_) {}
-            }
-        }
-        phoneInput.addEventListener('blur', _savePhoneIfValid);
         const preImg      = document.getElementById('q-pre-img');
         const facePlaceholder = document.getElementById('q-face-placeholder');
 
@@ -1351,21 +1401,11 @@
                 document.getElementById('q-loading-box').style.display = 'flex';
 
                 try {
-                    // Guard: re-valida telefone antes de submeter (evita whatsapp vazio)
-                    const _finalNums = (phoneInput.value || '').replace(/\D/g, '');
-                    if (typeof isValidBRPhone === 'function' && !isValidBRPhone(_finalNums)) {
-                        try { document.getElementById('q-loading-box').style.display = 'none'; } catch(_) {}
-                        try { uploadStep.style.display = 'block'; } catch(_) {}
-                        try { genBtn.disabled = false; } catch(_) {}
-                        try { phoneInput.focus(); } catch(_) {}
-                        return;
-                    }
-const fd = new FormData();
+                    const fd = new FormData();
                     fd.append('person_image', userPhoto, 'person.jpg');
                     fd.append('whatsapp', '55' + phoneInput.value.replace(/\D/g, ''));
                     fd.append('phone_raw', phoneInput.value);
                     fd.append('product_name', prodName);
-                    fd.append('product_url', window.location.href);
                     fd.append('product_type', currentProduct.category);
                     fd.append('product_fit', currentProduct.fit);
                     fd.append('api_key', keyToUse);
@@ -1417,7 +1457,16 @@ const fd = new FormData();
 
                     calculateFinalSize();
 
-                    const res = await fetch(WEBHOOK_PROVA, { method: 'POST', body: fd });
+                    const res = await (async () => {
+                        let _d = 1500;
+                        for (let _i = 0; _i < 4; _i++) {
+                            const _r = await fetch(WEBHOOK_PROVA, { method: 'POST', body: fd });
+                            if (_r.ok || _r.status === 400 || _r.status === 401 || _r.status === 403) return _r;
+                            if (_i === 3) return _r;
+                            await new Promise(_x => setTimeout(_x, _d + Math.random() * 500));
+                            _d *= 2;
+                        }
+                    })();
 
                     const contentType = res.headers.get("content-type") || "";
                     if (contentType.includes("application/json")) {
@@ -1440,6 +1489,7 @@ const fd = new FormData();
                         document.getElementById('q-final-view-img').src = URL.createObjectURL(blob);
                         document.querySelector('.q-card-ia').classList.add('is-result');
                         document.getElementById('q-step-result').style.display = 'flex';
+                        populateBuyCta();
                         loadRelatedProducts();
                         if (typeof _checkProvasRestantes === 'function') _checkProvasRestantes();
                     } else if (res.status === 401 || res.status === 403) {
