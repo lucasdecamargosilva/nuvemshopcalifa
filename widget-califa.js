@@ -531,6 +531,15 @@
         .q-res-mobile-only { margin: 0; }
 
         /* CTA de compra na tela de resultado */
+        .q-result-prodinfo { text-align: center; margin-bottom: 14px; }
+        .q-result-prodname {
+            font-family: var(--font-body); font-size: 14px; font-weight: 600;
+            color: var(--c-ink); line-height: 1.35; margin-bottom: 4px;
+        }
+        .q-result-prodprice {
+            font-family: var(--font-display); font-size: 26px; letter-spacing: 1px;
+            color: var(--c-ink); line-height: 1;
+        }
         .q-btn-buy-now {
             background: var(--c-ink); color: #fff; border: 1px solid var(--c-ink);
             width: 100%; padding: 17px 18px; font-family: var(--font-body);
@@ -729,15 +738,16 @@
 
                     <!-- Resultado -->
                     <div id="q-step-result">
-                        <span class="q-res-title">Veja como ficou em voc&ecirc; &#x2728;</span>
+                        <span class="q-res-title">Veja como ficou em voc&ecirc;</span>
                         <div id="q-result-img-col">
                             <img id="q-final-view-img">
                         </div>
                         <div id="q-result-actions-col">
-                            <div id="q-provas-restantes-result" class="q-provas-msg" style="text-align:center;margin-bottom:8px;"></div>
-                            <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">
-                                <span id="q-buy-label">Comprar Agora</span> <span class="q-buy-price" id="q-buy-price"></span>
-                            </button>
+                            <div class="q-result-prodinfo" id="q-result-prodinfo" style="display:none;">
+                                <div class="q-result-prodname" id="q-result-prodname"></div>
+                                <div class="q-result-prodprice" id="q-result-prodprice"></div>
+                            </div>
+                            <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">Comprar Agora</button>
                             <div class="q-buy-trust" id="q-buy-trust" style="display:none;">&#128274; Compra segura &middot; troca f&aacute;cil em 30 dias</div>
                             <div id="q-related-products" style="display:none;">
                                 <h4>Veja tamb&eacute;m</h4>
@@ -844,9 +854,15 @@
         var btn = document.getElementById('q-btn-buy-now');
         var trust = document.getElementById('q-buy-trust');
         if (!btn) return;
+        // Nome + valor do produto acima do botão
         var price = getMainPrice();
-        var priceEl = document.getElementById('q-buy-price');
-        if (priceEl) priceEl.textContent = price ? ('— ' + price) : '';
+        var prodName = (document.querySelector('h1.product__title,.product-single__title,h1') || {}).innerText || document.title || '';
+        var info = document.getElementById('q-result-prodinfo');
+        var nameEl = document.getElementById('q-result-prodname');
+        var priceEl = document.getElementById('q-result-prodprice');
+        if (nameEl) nameEl.textContent = (prodName || '').trim();
+        if (priceEl) priceEl.textContent = price || '';
+        if (info && ((prodName || '').trim() || price)) info.style.display = 'block';
         btn.style.display = 'flex';
         if (trust) trust.style.display = 'block';
         btn.onclick = buyNow;
