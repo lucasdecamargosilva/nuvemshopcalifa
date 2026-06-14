@@ -736,13 +736,9 @@
                         <div id="q-result-actions-col">
                             <div id="q-provas-restantes-result" class="q-provas-msg" style="text-align:center;margin-bottom:8px;"></div>
                             <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">
-                                <span id="q-buy-label">Quero esse</span> <span style="font-size:16px;">&#128526;</span> <span class="q-buy-price" id="q-buy-price"></span>
+                                <span id="q-buy-label">Comprar Agora</span> <span class="q-buy-price" id="q-buy-price"></span>
                             </button>
                             <div class="q-buy-trust" id="q-buy-trust" style="display:none;">&#128274; Compra segura &middot; troca f&aacute;cil em 30 dias</div>
-                            <button class="q-btn-outline" id="q-btn-back">Voltar ao Produto</button>
-                            <button class="q-btn-black q-res-mobile-only" id="q-retry-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;">
-                                <i class="ph ph-camera"></i> Tentar outra foto
-                            </button>
                             <div id="q-related-products" style="display:none;">
                                 <h4>Veja tamb&eacute;m</h4>
                                 <div class="q-related-grid" id="q-related-grid"></div>
@@ -794,7 +790,16 @@
     }
 
     function findStoreBuyBtn() {
-        return document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], [name="add_to_cart"], button[type="submit"].js-addtocart');
+        return document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], button[type="submit"].js-addtocart');
+    }
+
+    // ID da variação a comprar — prioriza o input do form (reflete a variação escolhida na página)
+    function getAddToCartId() {
+        var inp = document.querySelector('input[name="add_to_cart"]');
+        if (inp && inp.value) return inp.value;
+        var dv = document.querySelector('[data-variants]');
+        if (dv) { try { var arr = JSON.parse(dv.getAttribute('data-variants')); if (arr && arr[0] && arr[0].id) return arr[0].id; } catch (e) {} }
+        return '';
     }
 
     function populateBuyCta() {
@@ -807,10 +812,17 @@
         btn.style.display = 'flex';
         if (trust) trust.style.display = 'block';
         btn.onclick = function () {
-            // adiciona ao carrinho pelo botão nativo da loja (lida com variação) e vai pro checkout
+            // Adiciona SERVER-SIDE pela URL da Nuvemshop (sem depender de AJAX/timing,
+            // que deixava o carrinho vazio). Abre o carrinho já com o item dentro.
+            var id = getAddToCartId();
+            if (id) {
+                window.location.href = '/comprar/?add_to_cart=' + encodeURIComponent(id) + '&quantity=1';
+                return;
+            }
+            // Fallback: botão nativo da loja + espera maior pro AJAX concluir
             var sb = findStoreBuyBtn();
             try { if (sb) sb.click(); } catch (e) {}
-            setTimeout(function () { window.location.href = Q_CHECKOUT_URL; }, 700);
+            setTimeout(function () { window.location.href = Q_CHECKOUT_URL; }, 1500);
         };
     }
 
@@ -1066,7 +1078,7 @@
 
 
         closeBtn.onclick = () => closeModal();
-        backBtn.onclick = () => closeModal();
+        if (backBtn) backBtn.onclick = () => closeModal();
 
 
         modal.addEventListener('click', (e) => {
@@ -1074,7 +1086,7 @@
         });
 
 
-        retryBtn.onclick = () => {
+        if (retryBtn) retryBtn.onclick = () => {
             document.getElementById('q-step-result').style.display = 'none';
             photoStep.style.display = 'flex';
             document.querySelector('.q-card-ia').classList.remove('is-result');
