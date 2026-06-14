@@ -793,13 +793,45 @@
         return document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], button[type="submit"].js-addtocart');
     }
 
-    // ID da variação a comprar — prioriza o input do form (reflete a variação escolhida na página)
-    function getAddToCartId() {
+    // Acha o form de produto real (o que tem o input add_to_cart = product_id)
+    function getProductForm() {
+        var f = document.getElementById('product_form');
+        if (f && f.querySelector('input[name="add_to_cart"]')) return f;
         var inp = document.querySelector('input[name="add_to_cart"]');
-        if (inp && inp.value) return inp.value;
-        var dv = document.querySelector('[data-variants]');
-        if (dv) { try { var arr = JSON.parse(dv.getAttribute('data-variants')); if (arr && arr[0] && arr[0].id) return arr[0].id; } catch (e) {} }
-        return '';
+        if (inp && inp.closest('form')) return inp.closest('form');
+        return document.querySelector('form.js-product-form');
+    }
+
+    // Compra de verdade: submete uma CÓPIA do form do produto (POST real).
+    // A Nuvemshop só adiciona ao carrinho via POST — o GET antigo abria o
+    // carrinho vazio. O clone não tem o AJAX do tema, então faz POST nativo:
+    // servidor adiciona o item e redireciona pro carrinho JÁ com o produto.
+    function buyNow() {
+        var src = getProductForm();
+        if (src) {
+            var clone = document.createElement('form');
+            clone.method = 'post';
+            clone.action = src.getAttribute('action') || '/comprar/';
+            clone.style.display = 'none';
+            src.querySelectorAll('input, select, textarea').forEach(function (el) {
+                if (!el.name) return;
+                if ((el.type === 'checkbox' || el.type === 'radio') && !el.checked) return;
+                var h = document.createElement('input');
+                h.type = 'hidden'; h.name = el.name; h.value = el.value;
+                clone.appendChild(h);
+            });
+            if (!clone.querySelector('[name="quantity"]')) {
+                var q = document.createElement('input');
+                q.type = 'hidden'; q.name = 'quantity'; q.value = '1';
+                clone.appendChild(q);
+            }
+            document.body.appendChild(clone);
+            clone.submit();
+            return;
+        }
+        // Fallback: botão nativo da loja
+        var sb = findStoreBuyBtn();
+        if (sb) { try { sb.click(); } catch (e) {} }
     }
 
     function populateBuyCta() {
@@ -811,19 +843,7 @@
         if (priceEl) priceEl.textContent = price ? ('— ' + price) : '';
         btn.style.display = 'flex';
         if (trust) trust.style.display = 'block';
-        btn.onclick = function () {
-            // Adiciona SERVER-SIDE pela URL da Nuvemshop (sem depender de AJAX/timing,
-            // que deixava o carrinho vazio). Abre o carrinho já com o item dentro.
-            var id = getAddToCartId();
-            if (id) {
-                window.location.href = '/comprar/?add_to_cart=' + encodeURIComponent(id) + '&quantity=1';
-                return;
-            }
-            // Fallback: botão nativo da loja + espera maior pro AJAX concluir
-            var sb = findStoreBuyBtn();
-            try { if (sb) sb.click(); } catch (e) {}
-            setTimeout(function () { window.location.href = Q_CHECKOUT_URL; }, 1500);
-        };
+        btn.onclick = buyNow;
     }
 
 
