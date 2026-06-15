@@ -541,7 +541,7 @@
         }
         .q-scarcity {
             margin-top: 12px; font-family: var(--font-body); font-size: 11px; font-weight: 700;
-            color: #b91c1c; letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--c-danger); letter-spacing: 1.5px; text-transform: uppercase;
             display: flex; align-items: center; justify-content: flex-start; gap: 6px;
         }
         .q-scarcity i { font-size: 15px; }
@@ -560,17 +560,17 @@
         }
         .q-fakebuy {
             position: fixed; left: 18px; bottom: 18px; z-index: 2147483000;
-            background: #fff; color: #111; border: 1px solid #e8e8e8; border-radius: 10px;
+            background: var(--c-bg, #fff); color: var(--c-ink); border: 1px solid var(--c-line); border-radius: 10px;
             box-shadow: 0 8px 28px -6px rgba(0,0,0,.28); padding: 11px 14px;
             display: flex; align-items: center; gap: 10px; max-width: 290px;
             font-family: var(--font-body); opacity: 0; transform: translateY(14px);
             pointer-events: none; transition: opacity .35s ease, transform .35s ease;
         }
         .q-fakebuy.show { opacity: 1; transform: translateY(0); }
-        .q-fakebuy > i { font-size: 22px; color: #1b9e4b; flex-shrink: 0; }
+        .q-fakebuy > i { font-size: 22px; color: var(--c-ink); flex-shrink: 0; }
         .q-fakebuy strong { font-size: 12.5px; font-weight: 700; }
         .q-fakebuy > div { display: flex; flex-direction: column; line-height: 1.35; }
-        .q-fakebuy span { font-size: 10.5px; color: #888; }
+        .q-fakebuy span { font-size: 10.5px; color: var(--c-muted); }
         @media (max-width:560px){ .q-fakebuy{ left:12px; right:12px; bottom:12px; max-width:none; } }
         .q-btn-buy-now {
             background: var(--c-ink); color: #fff; border: 1px solid var(--c-ink);
@@ -902,7 +902,7 @@
         if (!el || !step || step.style.display === 'none') return;
         var nm = Q_FAKE_NAMES[Math.floor(Math.random() * Q_FAKE_NAMES.length)];
         var wh = Q_FAKE_WHEN[Math.floor(Math.random() * Q_FAKE_WHEN.length)];
-        el.innerHTML = '<i class="ph-fill ph-shopping-bag"></i><div><span style="font-size:12.5px;color:#111;"><strong>' + nm + '</strong> comprou este produto</span><span>' + wh + ' &middot; compra verificada</span></div>';
+        el.innerHTML = '<i class="ph-fill ph-shopping-bag"></i><div><span style="font-size:12.5px;color:var(--c-ink);"><strong>' + nm + '</strong> comprou este produto</span><span>' + wh + ' &middot; compra verificada</span></div>';
         el.classList.add('show');
         clearTimeout(el._hideT);
         el._hideT = setTimeout(function () { el.classList.remove('show'); }, 4500);
