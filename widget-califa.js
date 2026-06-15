@@ -519,7 +519,7 @@
         .q-res-subtitle, .q-res-note { display: none; }
 
         #q-result-img-col {
-            width: 100%; max-height: 72vh; background: var(--c-surface);
+            width: 100%; max-height: 56vh; background: var(--c-surface);
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
         #q-result-img-col img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
@@ -531,7 +531,7 @@
         .q-res-mobile-only { margin: 0; }
 
         /* CTA de compra na tela de resultado */
-        .q-result-prodinfo { text-align: center; margin-bottom: 6px; }
+        .q-result-prodinfo { text-align: left; margin-bottom: 6px; }
         .q-result-prodname {
             font-family: var(--font-body); font-size: 21px; font-weight: 700;
             color: var(--c-ink); line-height: 1.22; margin-bottom: 8px;
@@ -543,12 +543,12 @@
         .q-scarcity {
             margin-top: 12px; font-family: var(--font-body); font-size: 11px; font-weight: 700;
             color: #b91c1c; letter-spacing: 1.5px; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
+            display: flex; align-items: center; justify-content: flex-start; gap: 6px;
         }
         .q-scarcity i { font-size: 15px; }
         /* Selos de segurança */
         .q-seals {
-            display: flex; justify-content: center; gap: 30px;
+            display: flex; justify-content: flex-start; gap: 30px;
             margin: 18px 0; padding: 15px 0;
             border-top: 1px solid var(--c-line); border-bottom: 1px solid var(--c-line);
         }
@@ -771,7 +771,6 @@
 
                     <!-- Resultado -->
                     <div id="q-step-result">
-                        <span class="q-res-title">Veja como ficou em voc&ecirc;</span>
                         <div id="q-result-img-col">
                             <img id="q-final-view-img">
                         </div>
@@ -1313,7 +1312,7 @@
                     const _txt = restantes + (restantes === 1 ? ' prova restante hoje' : ' provas restantes hoje');
                     _els.forEach(el => { el.textContent = _txt; el.classList.remove('is-warn'); });
                 } else {
-                    _els.forEach(el => { el.textContent = 'Limite de 3 provas atingido — pague R$1 via PIX para mais uma.'; el.classList.add('is-warn'); });
+                    _els.forEach(el => { el.textContent = 'Você já usou suas 3 provas grátis de hoje.'; el.classList.add('is-warn'); });
                 }
             } catch(_) { _els.forEach(el => { el.textContent = ''; el.classList.remove('is-warn'); }); }
         }
@@ -1620,7 +1619,6 @@
                         document.querySelector('.q-card-ia').classList.add('is-result');
                         document.getElementById('q-step-result').style.display = 'flex';
                         populateBuyCta();
-                        loadRelatedProducts();
                         if (typeof _checkProvasRestantes === 'function') _checkProvasRestantes();
                     } else if (res.status === 401 || res.status === 403) {
                         document.getElementById('q-loading-box').style.display = 'none';
