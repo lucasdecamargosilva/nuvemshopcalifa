@@ -783,7 +783,7 @@
                             </div>
                             <div class="q-seals" id="q-seals" style="display:none;">
                                 <div class="q-seal"><i class="ph-fill ph-shield-check"></i><span>Compra<br>Segura</span></div>
-                                <div class="q-seal"><i class="ph-fill ph-arrows-counter-clockwise"></i><span>Troca Gr&aacute;tis<br>30 dias</span></div>
+                                <div class="q-seal"><i class="ph-fill ph-lock-key"></i><span>Pagamento<br>Seguro</span></div>
                             </div>
                             <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">Comprar Agora</button>
                             <div id="q-related-products" style="display:none;">
