@@ -531,22 +531,34 @@
         .q-res-mobile-only { margin: 0; }
 
         /* CTA de compra na tela de resultado */
-        .q-result-prodinfo { text-align: center; margin-bottom: 14px; }
+        .q-result-prodinfo { text-align: center; margin-bottom: 6px; }
         .q-result-prodname {
-            font-family: var(--font-body); font-size: 14px; font-weight: 600;
-            color: var(--c-ink); line-height: 1.35; margin-bottom: 4px;
+            font-family: var(--font-body); font-size: 21px; font-weight: 700;
+            color: var(--c-ink); line-height: 1.22; margin-bottom: 8px;
         }
         .q-result-prodprice {
-            font-family: var(--font-display); font-size: 26px; letter-spacing: 1px;
+            font-family: var(--font-display); font-size: 30px; letter-spacing: 1px;
             color: var(--c-ink); line-height: 1;
         }
         .q-scarcity {
-            margin-top: 8px; font-family: var(--font-body); font-size: 12px; font-weight: 700;
-            color: #cc3333; letter-spacing: .3px; display: flex; align-items: center;
-            justify-content: center; gap: 5px;
+            margin-top: 12px; font-family: var(--font-body); font-size: 11px; font-weight: 700;
+            color: #b91c1c; letter-spacing: 1.5px; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
         }
-        .q-scarcity .q-fire { animation: q-scarcity-pulse 1.4s infinite; }
-        @keyframes q-scarcity-pulse { 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+        .q-scarcity i { font-size: 15px; }
+        /* Selos de segurança */
+        .q-seals {
+            display: flex; justify-content: center; gap: 30px;
+            margin: 18px 0; padding: 15px 0;
+            border-top: 1px solid var(--c-line); border-bottom: 1px solid var(--c-line);
+        }
+        .q-seal { display: flex; align-items: center; gap: 9px; }
+        .q-seal > i { font-size: 24px; color: var(--c-ink); flex-shrink: 0; }
+        .q-seal span {
+            font-family: var(--font-body); font-size: 10px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .6px; line-height: 1.25;
+            color: var(--c-ink); text-align: left;
+        }
         .q-fakebuy {
             position: fixed; left: 18px; bottom: 18px; z-index: 2147483000;
             background: #fff; color: #111; border: 1px solid #e8e8e8; border-radius: 10px;
@@ -768,10 +780,13 @@
                             <div class="q-result-prodinfo" id="q-result-prodinfo" style="display:none;">
                                 <div class="q-result-prodname" id="q-result-prodname"></div>
                                 <div class="q-result-prodprice" id="q-result-prodprice"></div>
-                                <div class="q-scarcity" id="q-scarcity" style="display:none;"><span class="q-fire">&#128293;</span> S&oacute; restam <strong id="q-scarcity-n"></strong>&nbsp;unidades!</div>
+                                <div class="q-scarcity" id="q-scarcity" style="display:none;"><i class="ph-bold ph-fire"></i> APENAS <strong id="q-scarcity-n"></strong>&nbsp;UNIDADES RESTANTES</div>
+                            </div>
+                            <div class="q-seals" id="q-seals" style="display:none;">
+                                <div class="q-seal"><i class="ph-fill ph-shield-check"></i><span>Compra<br>Segura</span></div>
+                                <div class="q-seal"><i class="ph-fill ph-arrows-counter-clockwise"></i><span>Troca Gr&aacute;tis<br>30 dias</span></div>
                             </div>
                             <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">Comprar Agora</button>
-                            <div class="q-buy-trust" id="q-buy-trust" style="display:none;">&#128274; Compra segura &middot; troca f&aacute;cil em 30 dias</div>
                             <div id="q-related-products" style="display:none;">
                                 <h4>Veja tamb&eacute;m</h4>
                                 <div class="q-related-grid" id="q-related-grid"></div>
@@ -906,7 +921,7 @@
 
     function populateBuyCta() {
         var btn = document.getElementById('q-btn-buy-now');
-        var trust = document.getElementById('q-buy-trust');
+        var trust = document.getElementById('q-seals');
         if (!btn) return;
         // Nome + valor do produto acima do botão
         var price = getMainPrice();
@@ -924,7 +939,7 @@
         // Notificações de compra
         startFakeBuy();
         btn.style.display = 'flex';
-        if (trust) trust.style.display = 'block';
+        if (trust) trust.style.display = 'flex';
         btn.onclick = buyNow;
     }
 
