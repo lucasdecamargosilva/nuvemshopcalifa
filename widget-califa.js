@@ -1312,7 +1312,7 @@
                     const _txt = restantes + (restantes === 1 ? ' prova restante hoje' : ' provas restantes hoje');
                     _els.forEach(el => { el.textContent = _txt; el.classList.remove('is-warn'); });
                 } else {
-                    _els.forEach(el => { el.textContent = 'Você já usou suas 3 provas grátis de hoje.'; el.classList.add('is-warn'); });
+                    _els.forEach(el => { el.textContent = ''; el.classList.remove('is-warn'); });   // limite: não avisa na tela inicial; o PIX aparece só ao enviar a foto
                 }
             } catch(_) { _els.forEach(el => { el.textContent = ''; el.classList.remove('is-warn'); }); }
         }
