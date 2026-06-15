@@ -540,6 +540,27 @@
             font-family: var(--font-display); font-size: 26px; letter-spacing: 1px;
             color: var(--c-ink); line-height: 1;
         }
+        .q-scarcity {
+            margin-top: 8px; font-family: var(--font-body); font-size: 12px; font-weight: 700;
+            color: #cc3333; letter-spacing: .3px; display: flex; align-items: center;
+            justify-content: center; gap: 5px;
+        }
+        .q-scarcity .q-fire { animation: q-scarcity-pulse 1.4s infinite; }
+        @keyframes q-scarcity-pulse { 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+        .q-fakebuy {
+            position: fixed; left: 18px; bottom: 18px; z-index: 2147483000;
+            background: #fff; color: #111; border: 1px solid #e8e8e8; border-radius: 10px;
+            box-shadow: 0 8px 28px -6px rgba(0,0,0,.28); padding: 11px 14px;
+            display: flex; align-items: center; gap: 10px; max-width: 290px;
+            font-family: var(--font-body); opacity: 0; transform: translateY(14px);
+            pointer-events: none; transition: opacity .35s ease, transform .35s ease;
+        }
+        .q-fakebuy.show { opacity: 1; transform: translateY(0); }
+        .q-fakebuy > i { font-size: 22px; color: #1b9e4b; flex-shrink: 0; }
+        .q-fakebuy strong { font-size: 12.5px; font-weight: 700; }
+        .q-fakebuy > div { display: flex; flex-direction: column; line-height: 1.35; }
+        .q-fakebuy span { font-size: 10.5px; color: #888; }
+        @media (max-width:560px){ .q-fakebuy{ left:12px; right:12px; bottom:12px; max-width:none; } }
         .q-btn-buy-now {
             background: var(--c-ink); color: #fff; border: 1px solid var(--c-ink);
             width: 100%; padding: 17px 18px; font-family: var(--font-body);
@@ -743,9 +764,11 @@
                             <img id="q-final-view-img">
                         </div>
                         <div id="q-result-actions-col">
+                            <div class="q-fakebuy" id="q-fakebuy"></div>
                             <div class="q-result-prodinfo" id="q-result-prodinfo" style="display:none;">
                                 <div class="q-result-prodname" id="q-result-prodname"></div>
                                 <div class="q-result-prodprice" id="q-result-prodprice"></div>
+                                <div class="q-scarcity" id="q-scarcity" style="display:none;"><span class="q-fire">&#128293;</span> S&oacute; restam <strong id="q-scarcity-n"></strong>&nbsp;unidades!</div>
                             </div>
                             <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">Comprar Agora</button>
                             <div class="q-buy-trust" id="q-buy-trust" style="display:none;">&#128274; Compra segura &middot; troca f&aacute;cil em 30 dias</div>
@@ -850,6 +873,37 @@
         if (sb) { try { sb.click(); } catch (e) {} }
     }
 
+    // Escassez — número estável por produto (não muda a cada refresh)
+    function scarcityCount(name) {
+        var h = 5381, s = String(name || '');
+        for (var i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) >>> 0;
+        return 2 + (h % 6); // 2..7
+    }
+    // Notificações de compra (prova social)
+    var Q_FAKE_NAMES = ['Ana C.','Carlos M.','Mariana S.','João P.','Beatriz R.','Pedro A.','Juliana F.','Lucas T.','Fernanda L.','Rafael O.','Camila N.','Bruno G.','Larissa D.','Gabriel V.','Patrícia H.','Thiago B.','Aline M.','Rodrigo S.','Vanessa P.','Felipe C.','Letícia M.','Marcos A.'];
+    var Q_FAKE_WHEN = ['agora mesmo','há 1 minuto','há 2 minutos','há 4 minutos','há 6 minutos','há 9 minutos','há 12 minutos'];
+    var _fakeBuyTimer = null;
+    function _showFakeBuy() {
+        var step = document.getElementById('q-step-result');
+        var el = document.getElementById('q-fakebuy');
+        if (!el || !step || step.style.display === 'none') return;
+        var nm = Q_FAKE_NAMES[Math.floor(Math.random() * Q_FAKE_NAMES.length)];
+        var wh = Q_FAKE_WHEN[Math.floor(Math.random() * Q_FAKE_WHEN.length)];
+        el.innerHTML = '<i class="ph-fill ph-shopping-bag"></i><div><span style="font-size:12.5px;color:#111;"><strong>' + nm + '</strong> comprou este produto</span><span>' + wh + ' &middot; compra verificada</span></div>';
+        el.classList.add('show');
+        clearTimeout(el._hideT);
+        el._hideT = setTimeout(function () { el.classList.remove('show'); }, 4500);
+    }
+    function startFakeBuy() {
+        stopFakeBuy();
+        setTimeout(_showFakeBuy, 3000);
+        _fakeBuyTimer = setInterval(_showFakeBuy, 12000);
+    }
+    function stopFakeBuy() {
+        if (_fakeBuyTimer) { clearInterval(_fakeBuyTimer); _fakeBuyTimer = null; }
+        var el = document.getElementById('q-fakebuy'); if (el) el.classList.remove('show');
+    }
+
     function populateBuyCta() {
         var btn = document.getElementById('q-btn-buy-now');
         var trust = document.getElementById('q-buy-trust');
@@ -863,6 +917,12 @@
         if (nameEl) nameEl.textContent = (prodName || '').trim();
         if (priceEl) priceEl.textContent = price || '';
         if (info && ((prodName || '').trim() || price)) info.style.display = 'block';
+        // Escassez
+        var sc = document.getElementById('q-scarcity');
+        var scn = document.getElementById('q-scarcity-n');
+        if (sc && scn && (prodName || '').trim()) { scn.textContent = scarcityCount(prodName); sc.style.display = 'flex'; }
+        // Notificações de compra
+        startFakeBuy();
         btn.style.display = 'flex';
         if (trust) trust.style.display = 'block';
         btn.onclick = buyNow;
@@ -1099,6 +1159,7 @@
         function closeModal() {
             modal.style.display = 'none';
             unlockBodyScroll();
+            try { stopFakeBuy(); } catch (e) {}
         }
 
 
