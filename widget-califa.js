@@ -532,11 +532,11 @@
         /* CTA de compra na tela de resultado */
         .q-result-prodinfo { text-align: left; margin-bottom: 6px; }
         .q-result-prodname {
-            font-family: var(--font-body); font-size: 21px; font-weight: 700;
-            color: var(--c-ink); line-height: 1.22; margin-bottom: 8px;
+            font-family: var(--font-body); font-size: 16px; font-weight: 700;
+            color: var(--c-ink); line-height: 1.25; margin-bottom: 6px;
         }
         .q-result-prodprice {
-            font-family: var(--font-display); font-size: 30px; letter-spacing: 1px;
+            font-family: var(--font-display); font-size: 22px; letter-spacing: .5px; font-weight: 700;
             color: var(--c-ink); line-height: 1;
         }
         .q-scarcity {
